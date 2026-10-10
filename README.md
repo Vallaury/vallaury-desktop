@@ -49,7 +49,7 @@ Packages are on the [releases page](https://github.com/sappafrancesco/vallaury-d
 | System | Package | Needs |
 |---|---|---|
 | Linux (x64, arm64) | `.AppImage` (any distribution), `.deb` (Debian, Ubuntu, Mint), `.rpm` (Fedora, openSUSE) | glibc 2.25 or newer (measured on the x64 build), GTK 3 and NSS from the system. A secret service (GNOME Keyring, KWallet) lets the app keep its key on disk; without one the key lives in memory only |
-| Windows (x64, arm64) | `.exe` installer, per user, no administrator rights | Windows 10 or newer |
+| Windows (x64, arm64, ia32) | `.exe` installer, per user, no administrator rights | Windows 10 or newer. The 32-bit (ia32) build uses Electron 43, the last version that supports it, and does not update itself: it tells you when a new version exists |
 | macOS (Apple silicon and Intel) | `.dmg` | macOS 13 or newer |
 
 The minimums are Electron's own, not ours. AppImage: `chmod +x Vallaury-*.AppImage && ./Vallaury-*.AppImage` (if FUSE is missing, add `--appimage-extract-and-run`).
