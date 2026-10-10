@@ -1,0 +1,22 @@
+{
+  "name": "vallaury-desktop",
+  "productName": "Vallaury",
+  "version": "0.1.0",
+  "description": "Vallaury for Windows, Linux and macOS: a window around app.vallaury.it.",
+  "license": "GPL-3.0-only",
+  "author": "Francesco Sappa",
+  "homepage": "https://app.vallaury.it",
+  "main": "dist/main.js",
+  "private": true,
+  "scripts": {
+    "build": "tsc -p . && node scripts/copy-assets.mjs",
+    "start": "npm run build && electron .",
+    "test": "npm run build && node --test dist/*.test.js",
+    "typecheck": "tsc -p . --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "electron": "44.7.0",
+    "typescript": "^5.9.3"
+  }
+}
