@@ -4,6 +4,14 @@ updates:
     directory: /
     schedule: { interval: weekly }
     open-pull-requests-limit: 5
+    ignore:
+      # Moved on purpose, with a test: the compiler, the Node typings (match the Node in .nvmrc) and Electron itself.
+      - dependency-name: typescript
+        update-types: [version-update:semver-major]
+      - dependency-name: "@types/node"
+        update-types: [version-update:semver-major]
+      - dependency-name: electron
+        update-types: [version-update:semver-major]
     groups:
       build-tools:
         patterns: ["electron-builder", "@electron/*", "typescript", "@types/*"]
