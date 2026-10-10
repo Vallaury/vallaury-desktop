@@ -1,0 +1,11 @@
+/dist/
+/out/
+node_modules/
+*.log
+.DS_Store
+.idea/
+*.pfx
+*.p12
+*.cer
+*.pem
+.env

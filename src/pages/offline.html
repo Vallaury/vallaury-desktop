@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; connect-src https:; img-src data:">
+<title>Vallaury</title>
+<style>
+  :root { --bg: #f6fbf7; --ink: #0b2a20; --muted: #4a5f57; --accent: #247a64; --soft: #e2f3e9; --line: #d6e6dc; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #0e1a15; --ink: #e8f3ed; --muted: #9db5aa; --soft: #17332a; --line: #25443a; } }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body { background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, "Segoe UI", Roboto, sans-serif; display: grid; place-items: center; padding: 24px; }
+  main { max-width: 26rem; text-align: center; }
+  .mark { width: 64px; height: 64px; margin: 0 auto 20px; border-radius: 20px; background: var(--soft); display: grid; place-items: center; }
+  .mark svg { width: 32px; height: 32px; stroke: var(--accent); }
+  h1 { font-size: 1.35rem; margin: 0 0 8px; }
+  p { margin: 0 0 20px; color: var(--muted); }
+  button { font: inherit; font-weight: 600; background: var(--accent); color: #fff; border: 0; border-radius: 999px; padding: 10px 24px; cursor: pointer; transition: transform .12s; }
+  button:active { transform: scale(.95); }
+  button:disabled { opacity: .7; cursor: default; }
+  .state { margin-top: 16px; font-size: .875rem; min-height: 1.4em; color: var(--muted); }
+  @media (prefers-reduced-motion: reduce) { button { transition: none; } }
+</style>
+</head>
+<body>
+<main>
+  <div class="mark" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 8.8a15 15 0 0 1 20 0M5 12.5a10 10 0 0 1 14 0M8.5 16.2a5 5 0 0 1 7 0M12 20h.01"/><path d="M3 3l18 18"/></svg>
+  </div>
+  <h1 id="title"></h1>
+  <p id="body"></p>
+  <button id="retry" type="button"></button>
+  <div class="state" role="status" aria-live="polite" id="state"></div>
+</main>
+<script>
+  const params = new URLSearchParams(location.search);
+  const it = params.get("lang") !== "en";
+  const target = params.get("to") || "https://app.vallaury.it/";
+  const server = params.get("why") === "server";
+  const t = it
+    ? { title: server ? "Il servizio non risponde" : "Sei offline", body: server ? "Vallaury ha un problema in questo momento. Riprovo da solo tra poco." : "Controlla la connessione. Appena torna la rete, riapro Vallaury da solo.", retry: "Riprova", trying: "Provo a collegarmi…", failed: "Ancora niente. Riprovo tra poco." }
+    : { title: server ? "The service is not answering" : "You are offline", body: server ? "Vallaury has a problem right now. I will try again by myself shortly." : "Check your connection. As soon as it is back, Vallaury opens by itself.", retry: "Try again", trying: "Trying to connect…", failed: "Still nothing. Trying again shortly." };
+  document.documentElement.lang = it ? "it" : "en";
+  document.getElementById("title").textContent = t.title;
+  document.getElementById("body").textContent = t.body;
+  const button = document.getElementById("retry");
+  const state = document.getElementById("state");
+  button.textContent = t.retry;
+  let busy = false;
+  async function attempt(manual) {
+    if (busy) return;
+    busy = true;
+    button.disabled = true;
+    if (manual) state.textContent = t.trying;
+    try {
+      const r = await fetch(target, { mode: "no-cors", cache: "no-store" });
+      if (r.type === "opaque" || r.ok) return location.replace(target);
+    } catch {}
+    state.textContent = manual ? t.failed : "";
+    button.disabled = false;
+    busy = false;
+  }
+  button.addEventListener("click", () => attempt(true));
+  window.addEventListener("online", () => attempt(false));
+  setInterval(() => attempt(false), 10000);
+</script>
+</body>
+</html>
