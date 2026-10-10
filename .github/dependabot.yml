@@ -1,0 +1,12 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule: { interval: weekly }
+    open-pull-requests-limit: 5
+    groups:
+      build-tools:
+        patterns: ["electron-builder", "@electron/*", "typescript", "@types/*"]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: { interval: weekly }

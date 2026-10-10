@@ -25,5 +25,15 @@
     "electron-builder": "^26.15.3",
     "typescript": "^5.9.3"
   },
-  "desktopName": "vallaury.desktop"
+  "desktopName": "vallaury.desktop",
+  "engines": {
+    "node": ">=22"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sappafrancesco/vallaury-desktop.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sappafrancesco/vallaury-desktop/issues"
+  }
 }

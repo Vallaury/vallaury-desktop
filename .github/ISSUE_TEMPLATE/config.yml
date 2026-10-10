@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Problem with the Vallaury service itself (login, timetable, notes)
+    url: https://app.vallaury.it
+    about: This tracker is for the desktop app only. Use the feedback button inside the web app for the service.
+  - name: Security problem
+    url: https://github.com/sappafrancesco/vallaury-desktop/security/advisories/new
+    about: Please report vulnerabilities privately, not in a public issue.
