@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain, Menu, nativeTheme, screen, session, shell, type WebContents } from "electron";
 import { join } from "node:path";
 import { canOpenOutside, isInside, siteUrl, userAgent } from "./origin";
+import * as device from "./device";
 import { begin, finish, startUrl, type Pending } from "./signin";
 import { DEFAULT_SIZE, load, save } from "./window-state";
 
@@ -12,6 +13,7 @@ const PERMISSIONS = new Set(["notifications", "clipboard-sanitized-write", "full
 let win: BrowserWindow | null = null;
 let quitting = false;
 let pending: Pending | null = null;
+let bridge: ReturnType<typeof device.setUp> | null = null;
 
 if (!app.requestSingleInstanceLock()) {
     app.quit();
@@ -48,7 +50,14 @@ function start() {
         void shell.openExternal(startUrl(SITE, pending));
     });
     Menu.setApplicationMenu(buildMenu());
+    bridge = device.setUp({ site: SITE, window: () => win, open: (path) => { show(); void win?.webContents.loadURL(new URL(path, SITE).href); } });
+    session.defaultSession.on("will-download", (_e, item) => {
+        item.once("done", (_event, state) => {
+            if (state === "completed") bridge?.saved(item.getSavePath(), item.getFilename());
+        });
+    });
     create();
+    bridge.start();
     handleLink(process.argv.find((a) => a.startsWith("vallaury://")));
 }
 
@@ -93,6 +102,8 @@ function create() {
     w.webContents.on("did-navigate", (_e, url, status) => {
         if (status >= 500 && isInside(url, SITE)) void showError(w.webContents, url, "server");
     });
+    w.webContents.on("did-navigate", () => bridge?.navigated());
+    w.webContents.on("did-navigate-in-page", () => bridge?.navigated());
     void w.loadURL(SITE);
 }
 

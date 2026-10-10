@@ -33,3 +33,12 @@ test("the user agent drops Electron and names the app", () => {
     assert.match(ua, /Chrome\/150/);
     assert.match(ua, /VallauryApp\/0\.1\.0 \(Desktop; Linux\)$/);
 });
+
+test("private pages are the same as on the phone", async () => {
+    const { isSensitive } = await import("./origin");
+    assert.equal(isSensitive("https://app.vallaury.it/security"), true);
+    assert.equal(isSensitive("https://app.vallaury.it/grades/3"), true);
+    assert.equal(isSensitive("https://app.vallaury.it/recover"), true);
+    assert.equal(isSensitive("https://app.vallaury.it/gradesheet"), false);
+    assert.equal(isSensitive("https://app.vallaury.it/home"), false);
+});

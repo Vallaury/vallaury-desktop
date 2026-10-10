@@ -34,3 +34,13 @@ export function userAgent(fallback: string, version: string, platform: NodeJS.Pl
     const os = platform === "win32" ? "Windows" : platform === "darwin" ? "macOS" : "Linux";
     return `${base} VallauryApp/${version} (Desktop; ${os})`;
 }
+
+/** Pages that show private things (account security, grades, moderation decisions): kept out of screenshots when the person asks (same list as the Android app). */
+export function isSensitive(url: string): boolean {
+    try {
+        const p = new URL(url).pathname;
+        return /^\/(security|grades|moderation)(\/|$)/.test(p) || p === "/recover";
+    } catch {
+        return false;
+    }
+}
