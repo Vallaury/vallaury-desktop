@@ -1,6 +1,10 @@
 import { app, BrowserWindow, ipcMain, Menu, nativeTheme, screen, session, shell, type WebContents } from "electron";
 import { join } from "node:path";
 import { canOpenOutside, isInside, siteUrl, userAgent } from "./origin";
+import * as autostart from "./autostart";
+import { keepsRunning, trayUsable } from "./background";
+import * as store from "./store";
+import * as tray from "./tray";
 import { attach as contextMenu } from "./context-menu";
 import * as device from "./device";
 import { begin, finish, startUrl, type Pending } from "./signin";
@@ -15,6 +19,11 @@ let win: BrowserWindow | null = null;
 let quitting = false;
 let pending: Pending | null = null;
 let bridge: ReturnType<typeof device.setUp> | null = null;
+let trayIcon: ReturnType<typeof tray.create> | null = null;
+
+const usable = () => trayUsable(process.platform, process.env.XDG_CURRENT_DESKTOP, process.env.VALLAURY_TRAY);
+/** Closing the window hides it (instead of quitting) when a linked computer has notifications to deliver. */
+const staysInBackground = () => keepsRunning({ background: store.get().background, usable: usable(), linked: Boolean(bridge?.notifications.linked()), notifications: Boolean(bridge?.notifications.get()) });
 
 if (!app.requestSingleInstanceLock()) {
     app.quit();
@@ -53,7 +62,29 @@ function start() {
         void shell.openExternal(startUrl(SITE, pending));
     });
     Menu.setApplicationMenu(buildMenu());
-    bridge = device.setUp({ site: SITE, window: () => win, open: (path) => { show(); void win?.webContents.loadURL(new URL(path, SITE).href); } });
+    trayIcon = tray.create({
+        show,
+        open: (path) => openPage(path),
+        quit: () => app.quit(),
+        state: () => ({ linked: Boolean(bridge?.notifications.linked()), notifications: Boolean(bridge?.notifications.get()), autostart: autostart.isOn() }),
+        toggleNotifications: () => bridge?.notifications.set(!bridge.notifications.get()),
+        toggleAutostart: () => {
+            autostart.set(!autostart.isOn());
+            syncTray();
+        },
+        window: () => win,
+    });
+    bridge = device.setUp({
+        site: SITE,
+        window: () => win,
+        open: openPage,
+        onChange: syncTray,
+        // A notification arrived while the window was not in front: it counts until the person looks.
+        onShown: () => {
+            if (!win?.isVisible() || !win.isFocused()) trayIcon?.setUnread(trayIcon.unread + 1);
+        },
+    });
+    syncTray();
     session.defaultSession.on("will-download", (_e, item) => {
         item.once("done", (_event, state) => {
             if (state === "completed") bridge?.saved(item.getSavePath(), item.getFilename());
@@ -62,6 +93,17 @@ function start() {
     create();
     bridge.start();
     handleLink(process.argv.find((a) => a.startsWith("vallaury://")));
+}
+
+/** The icon in the tray follows the setting (and whether this desktop can show one). */
+function syncTray() {
+    trayIcon?.visible(store.get().background && usable());
+    trayIcon?.refresh();
+}
+
+function openPage(path: string) {
+    show();
+    void win?.webContents.loadURL(new URL(path, SITE).href);
 }
 
 function stateFile() {
@@ -84,12 +126,28 @@ function create() {
     if (remembered?.maximized) win.maximize();
     const w = win;
     // Shown once the first page is painted, so the window never opens as a blank sheet.
-    w.once("ready-to-show", () => w.show());
+    const hidden = autostart.startedHidden() && staysInBackground();
+    w.once("ready-to-show", () => (hidden ? undefined : w.show()));
     const remember = () => {
         if (w.isDestroyed() || w.isMinimized() || w.isFullScreen()) return;
         save(stateFile(), { bounds: w.getNormalBounds(), maximized: w.isMaximized() });
     };
-    w.on("close", remember);
+    w.on("close", (event) => {
+        remember();
+        if (quitting || !staysInBackground()) return;
+        event.preventDefault();
+        w.hide();
+        // Said once, when it first happens: the app is still there, and how to really close it.
+        if (!store.get().noted) {
+            store.set({ noted: true });
+            const where = process.platform === "darwin" ? "l'icona nella barra dei menu" : "l'icona nella barra di sistema";
+            bridge?.tell("Vallaury resta attivo", `Ti avvisa dei cambiamenti anche a finestra chiusa. Per chiuderlo davvero usa ${where} e scegli Esci.`);
+        }
+    });
+    // Windows: the system is shutting down, so closing must not be held back.
+    w.on("query-session-end" as never, () => (quitting = true));
+    w.on("focus", () => trayIcon?.setUnread(0));
+    w.on("show", () => trayIcon?.setUnread(0));
     w.on("resized", remember);
     w.on("moved", remember);
     w.on("maximize", remember);
