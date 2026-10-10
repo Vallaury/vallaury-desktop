@@ -12,9 +12,10 @@ export const EVERY_MS = 6 * 60 * 60_000;
  * and the system packages (deb, rpm) belong to the package manager and need administrator rights: for those the person is told
  * and taken to the download. An unpackaged run never updates.
  */
-export function modeFor(o: { platform: NodeJS.Platform; packaged: boolean; appImage: boolean; macSigned: boolean; portable: boolean }): Mode {
+export function modeFor(o: { platform: NodeJS.Platform; arch?: string; packaged: boolean; appImage: boolean; macSigned: boolean; portable: boolean }): Mode {
     if (!o.packaged) return "off";
-    if (o.platform === "win32") return o.portable ? "notify" : "auto";
+    // The 32-bit Windows build comes from an older Electron and is not part of the update feed, so it only tells.
+    if (o.platform === "win32") return o.portable || o.arch === "ia32" ? "notify" : "auto";
     if (o.platform === "darwin") return o.macSigned ? "auto" : "notify";
     return o.appImage ? "auto" : "notify";
 }
@@ -25,6 +26,7 @@ type Updater = typeof import("electron-updater").autoUpdater;
 export function start(hooks: { beforeInstall: () => void }) {
     const mode = modeFor({
         platform: process.platform,
+        arch: process.arch,
         packaged: app.isPackaged,
         appImage: Boolean(process.env.APPIMAGE),
         macSigned: false, // becomes true when the Apple Developer account exists and the dmg is signed and notarised

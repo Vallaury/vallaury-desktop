@@ -61,6 +61,8 @@ jobs:
             echo "WIN_CSC_KEY_PASSWORD=$PASSWORD" >> "$GITHUB_ENV"
           fi
       - run: npm run dist:win
+      # Electron 44 no longer builds for 32-bit Windows; Electron 43 (still supported) does. Installer only, no update feed.
+      - run: npm run dist:win32
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: windows
@@ -69,6 +71,11 @@ jobs:
             out/*.exe.blockmap
             out/latest.yml
             out/latest-arm64.yml
+          if-no-files-found: error
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: windows-ia32
+          path: out32/*.exe
           if-no-files-found: error
 
   macos:

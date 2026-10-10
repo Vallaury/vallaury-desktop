@@ -1,7 +1,7 @@
 {
   "name": "vallaury-desktop",
   "productName": "Vallaury",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Vallaury for Windows, Linux and macOS: a window around app.vallaury.it.",
   "license": "GPL-3.0-only",
   "author": "Francesco Sappa",
@@ -15,6 +15,7 @@
     "typecheck": "tsc -p . --noEmit",
     "dist:linux": "npm run build && electron-builder --linux --publish never",
     "dist:win": "npm run build && electron-builder --win --publish never",
+    "dist:win32": "npm run build && electron-builder --win nsis --ia32 --publish never -c.electronVersion=43.7.9 -c.directories.output=out32",
     "dist:mac": "npm run build && electron-builder --mac --publish never",
     "dist": "npm run build && electron-builder --publish never"
   },
