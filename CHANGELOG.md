@@ -2,6 +2,7 @@
 
 ## 0.1.0 (unreleased)
 
+- Updates: the Windows installer and the Linux AppImage look for a new version a minute after start and every six hours, download it quietly and install it when the app closes (a notice offers to restart now). The Mac app (until it is signed) and the deb and rpm packages only say that a new version exists and open the download page. Help > Check for updates asks by hand. No telemetry: the check is a plain request for the release list.
 - Window around `https://app.vallaury.it`; remembers position, size and maximised state.
 - Only the site stays inside the window; other addresses open in the system browser (web, mail and phone links only).
 - Permissions: notifications, clipboard write and full screen for the site; everything else is refused.

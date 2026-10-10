@@ -8,6 +8,7 @@ import * as tray from "./tray";
 import { attach as contextMenu } from "./context-menu";
 import * as device from "./device";
 import { begin, finish, startUrl, type Pending } from "./signin";
+import * as updates from "./updates";
 import { DEFAULT_SIZE, load, save } from "./window-state";
 
 // Windows shows notifications and groups the taskbar button by this id; it must match the installer's.
@@ -25,6 +26,7 @@ let quitting = false;
 let pending: Pending | null = null;
 let bridge: ReturnType<typeof device.setUp> | null = null;
 let trayIcon: ReturnType<typeof tray.create> | null = null;
+let updater: ReturnType<typeof updates.start> | null = null;
 
 const usable = () => trayUsable(process.platform, process.env.XDG_CURRENT_DESKTOP, process.env.VALLAURY_TRAY);
 /** Closing the window hides it (instead of quitting) when a linked computer has notifications to deliver. */
@@ -97,6 +99,7 @@ function start() {
     });
     create();
     bridge.start();
+    updater = updates.start({ beforeInstall: () => (quitting = true) });
     handleLink(process.argv.find((a) => a.startsWith("vallaury://")));
 }
 
@@ -255,6 +258,7 @@ function buildMenu() {
             role: "help" as const,
             submenu: [
                 { label: "Informazioni su Vallaury", click: () => app.showAboutPanel() },
+                ...(app.isPackaged ? [{ label: "Cerca aggiornamenti", click: () => void updater?.check(true) }] : []),
                 { label: "Informativa sulla privacy", click: () => void shell.openExternal(`${SITE}/privacy`) },
                 { label: "Segnala un problema dell'app", click: () => void shell.openExternal("https://github.com/sappafrancesco/vallaury-desktop/issues/new/choose") },
             ],
