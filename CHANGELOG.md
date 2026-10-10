@@ -11,4 +11,8 @@
 - Notifications without any push service; a click opens the page the notification is about.
 - Private pages (security, grades, moderation) are kept out of screenshots on Windows and macOS when the setting is on.
 - A notification says where a downloaded file was saved.
+- Icon in the system tray / menu bar with Open, Today, Timetable, Homework, Exams, New note, Notifications, Start at login and Quit. Where the desktop shows no tray (GNOME without an extension) closing the window quits instead of hiding.
+- Closing the window keeps the app running when a linked computer has notifications on; a notice says so once.
+- Start when you sign in to the computer, hidden (off by default).
+- Count of new notifications on the dock icon, a dot on the Windows taskbar button and the tray tooltip.
 - One window at a time; a second launch focuses the first.

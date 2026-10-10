@@ -19,6 +19,10 @@ contextBridge.exposeInMainWorld(
             unpair: () => ask("link-unpair"),
             forget: (session?: boolean) => ask("link-forget", Boolean(session)),
         }),
+        desktop: Object.freeze({
+            get: () => ask("desktop-get"),
+            set: (change: { autostart?: boolean; background?: boolean }) => ask("desktop-set", { autostart: change?.autostart, background: change?.background }),
+        }),
         notifications: Object.freeze({
             status: () => ask("notify-status"),
             enable: () => ask("notify-enable"),

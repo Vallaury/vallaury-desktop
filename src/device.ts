@@ -1,5 +1,7 @@
 import { app, BrowserWindow, ipcMain, net, Notification, powerMonitor, session, shell } from "electron";
 import { hostname } from "node:os";
+import * as autostart from "./autostart";
+import { trayUsable } from "./background";
 import { isInside, isSensitive } from "./origin";
 import { lines, nextDelay, pair, Rejected, STALE_MS, unpair, type Fetcher } from "./link";
 import * as store from "./store";
@@ -8,7 +10,7 @@ import * as store from "./store";
  * The computer's side of the bridge: linking to the account, the notifications poll, the screen protection setting, sign-out cleanup.
  * Everything here answers only the site's own top frame.
  */
-export function setUp(opts: { site: string; window: () => BrowserWindow | null; open: (path: string) => void }) {
+export function setUp(opts: { site: string; window: () => BrowserWindow | null; open: (path: string) => void; onChange: () => void; onShown: () => void }) {
     const { site } = opts;
     const fetcher: Fetcher = (url, init) => net.fetch(url, init) as ReturnType<Fetcher>;
     const shown = new Set<Notification>();
@@ -72,6 +74,7 @@ export function setUp(opts: { site: string; window: () => BrowserWindow | null; 
         n.on("click", () => opts.open(href));
         n.on("close", () => shown.delete(n));
         n.show();
+        opts.onShown();
     }
 
     ipcMain.handle("link-status", (e) => {
@@ -122,13 +125,35 @@ export function setUp(opts: { site: string; window: () => BrowserWindow | null; 
         return { ok: true };
     });
 
+    function setNotifications(on: boolean) {
+        store.set({ notify: on });
+        failures = 0;
+        if (!on) {
+            stop();
+            clearShown();
+        } else if (store.key()) void poll();
+        opts.onChange();
+    }
+
+    const usable = () => trayUsable(process.platform, process.env.XDG_CURRENT_DESKTOP, process.env.VALLAURY_TRAY);
+
+    ipcMain.handle("desktop-get", (e) => (trusted(e) ? { ok: true, autostart: autostart.isOn(), background: store.get().background, trayUsable: usable() } : { ok: false }));
+
+    ipcMain.handle("desktop-set", (e, change: unknown) => {
+        if (!trusted(e)) return { ok: false };
+        const c = (change ?? {}) as { autostart?: unknown; background?: unknown };
+        let ok = true;
+        if (typeof c.autostart === "boolean") ok = autostart.set(c.autostart) && ok;
+        if (typeof c.background === "boolean") store.set({ background: c.background });
+        opts.onChange();
+        return { ok };
+    });
+
     ipcMain.handle("notify-status", (e) => (trusted(e) ? { ok: true, enabled: enabled() } : { ok: false }));
 
     ipcMain.handle("notify-enable", (e) => {
         if (!trusted(e) || !Notification.isSupported()) return { ok: false };
-        store.set({ notify: true });
-        failures = 0;
-        if (store.key()) void poll();
+        setNotifications(true);
         return { ok: true };
     });
 
@@ -153,9 +178,17 @@ export function setUp(opts: { site: string; window: () => BrowserWindow | null; 
     powerMonitor.on("resume", () => schedule(30_000));
 
     return {
+        notifications: { get: () => enabled(), linked: () => Boolean(store.key()), set: setNotifications },
         navigated: applyProtection,
         start: () => {
             if (store.key() && enabled()) void poll();
+        },
+        /** A plain notice from the app itself. */
+        tell: (title: string, body: string) => {
+            const n = new Notification({ title, body, silent: true });
+            shown.add(n);
+            n.on("close", () => shown.delete(n));
+            n.show();
         },
         /** A file the site made was saved: say where, and open the folder on a click. */
         saved: (path: string, name: string) => {
