@@ -51,6 +51,7 @@ linux:
       MimeType: x-scheme-handler/vallaury
 
 deb:
+  packageCategory: education
   depends: [libgtk-3-0, libnotify4, libnss3, libxss1, libxtst6, xdg-utils, libatspi2.0-0, libuuid1, libsecret-1-0]
 rpm:
   depends: [gtk3, libnotify, nss, libXScrnSaver, libXtst, xdg-utils, at-spi2-core, libuuid, libsecret]
@@ -66,6 +67,8 @@ win:
     - { target: nsis, arch: [x64, arm64] }
   # Signed in CI when a certificate is configured (see .github/workflows/release.yml); otherwise unsigned.
 nsis:
+  # One installer per processor (about 100 MB each) instead of a 200 MB one that carries both.
+  buildUniversalInstaller: false
   oneClick: true
   perMachine: false
   deleteAppDataOnUninstall: false
