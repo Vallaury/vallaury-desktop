@@ -41,3 +41,17 @@ npm start       # builds and opens the window
 ## Status
 
 Early releases. See [CHANGELOG.md](CHANGELOG.md).
+
+## Install
+
+Packages are on the [releases page](https://github.com/sappafrancesco/vallaury-desktop/releases). Every release carries `SHA256SUMS` and a build provenance statement.
+
+| System | Package | Needs |
+|---|---|---|
+| Linux (x64, arm64) | `.AppImage` (any distribution), `.deb` (Debian, Ubuntu, Mint), `.rpm` (Fedora, openSUSE) | glibc 2.25 or newer (measured on the x64 build), GTK 3 and NSS from the system. A secret service (GNOME Keyring, KWallet) lets the app keep its key on disk; without one the key lives in memory only |
+| Windows (x64, arm64) | `.exe` installer, per user, no administrator rights | Windows 10 or newer |
+| macOS (Apple silicon and Intel) | `.dmg` | macOS 13 or newer |
+
+The minimums are Electron's own, not ours. AppImage: `chmod +x Vallaury-*.AppImage && ./Vallaury-*.AppImage` (if FUSE is missing, add `--appimage-extract-and-run`).
+
+Windows and macOS builds are not signed yet, so the system asks for one extra confirmation the first time. On Windows, SmartScreen: More info, then Run anyway. On macOS, right-click the app, Open, confirm.

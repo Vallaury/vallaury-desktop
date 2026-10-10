@@ -1,0 +1,99 @@
+appId: it.vallaury.desktop
+productName: Vallaury
+copyright: Copyright © 2026 the Vallaury project
+artifactName: Vallaury-${version}-${os}-${arch}.${ext}
+
+directories:
+  output: out
+  buildResources: build
+
+files:
+  - dist/**/*
+  - assets/**/*
+  - package.json
+  - "!dist/**/*.test.js"
+
+asar: true
+compression: maximum
+
+# The links vallaury://... (the return from Google, notifications) open this app.
+protocols:
+  - name: Vallaury
+    schemes: [vallaury]
+
+# Hardening of the Electron binary itself: no running it as plain Node, no Node options from the environment,
+# the app is loaded only from the sealed archive, and cookies are stored encrypted.
+electronFuses:
+  runAsNode: false
+  enableCookieEncryption: true
+  enableNodeOptionsEnvironmentVariable: false
+  enableNodeCliInspectArguments: false
+  enableEmbeddedAsarIntegrityValidation: true
+  onlyLoadAppFromAsar: true
+  grantFileProtocolExtraPrivileges: false
+
+linux:
+  target:
+    - { target: AppImage, arch: [x64, arm64] }
+    - { target: deb, arch: [x64, arm64] }
+    - { target: rpm, arch: [x64, arm64] }
+  category: Education
+  executableName: vallaury
+  synopsis: Orario, compiti, verifiche e appunti della tua classe
+  description: Vallaury per computer. Una finestra su app.vallaury.it, con le notifiche e l'accesso con Google.
+  maintainer: Vallaury <privacy@vallaury.it>
+  desktop:
+    entry:
+      Name: Vallaury
+      Comment: Orario, compiti, verifiche e appunti della tua classe
+      Keywords: scuola;orario;compiti;appunti;
+      StartupWMClass: Vallaury
+      MimeType: x-scheme-handler/vallaury
+
+deb:
+  depends: [libgtk-3-0, libnotify4, libnss3, libxss1, libxtst6, xdg-utils, libatspi2.0-0, libuuid1, libsecret-1-0]
+rpm:
+  depends: [gtk3, libnotify, nss, libXScrnSaver, libXtst, xdg-utils, at-spi2-core, libuuid, libsecret]
+
+appImage:
+  category: Education
+  desktop:
+    entry:
+      # The default adds --no-sandbox to every launch. AppRun already adds it by itself, and only where the system
+      # forbids user namespaces (for example Ubuntu 24.04 with its AppArmor restriction); everywhere else the sandbox stays on.
+      Exec: AppRun %U
+
+win:
+  target:
+    - { target: nsis, arch: [x64, arm64] }
+  # Signed in CI when a certificate is configured (see .github/workflows/release.yml); otherwise unsigned.
+nsis:
+  oneClick: true
+  perMachine: false
+  deleteAppDataOnUninstall: false
+  runAfterFinish: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Vallaury
+  uninstallDisplayName: Vallaury
+
+mac:
+  target:
+    - { target: dmg, arch: [universal] }
+    - { target: zip, arch: [universal] }
+  category: public.app-category.education
+  # Unsigned until an Apple Developer account exists; electron-builder signs and notarizes by itself when the
+  # CSC_LINK / APPLE_* variables are set in CI.
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
+  extendInfo:
+    CFBundleDisplayName: Vallaury
+dmg:
+  title: Vallaury ${version}
+
+publish:
+  provider: github
+  owner: sappafrancesco
+  repo: vallaury-desktop
