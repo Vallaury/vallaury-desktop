@@ -12,11 +12,18 @@
     "build": "tsc -p . && node scripts/copy-assets.mjs",
     "start": "npm run build && electron .",
     "test": "npm run build && node --test dist/*.test.js",
-    "typecheck": "tsc -p . --noEmit"
+    "typecheck": "tsc -p . --noEmit",
+    "dist:linux": "npm run build && electron-builder --linux --publish never",
+    "dist:win": "npm run build && electron-builder --win --publish never",
+    "dist:mac": "npm run build && electron-builder --mac --publish never",
+    "dist": "npm run build && electron-builder --publish never"
   },
   "devDependencies": {
+    "@electron/fuses": "^2.1.3",
     "@types/node": "^22.14.0",
     "electron": "44.7.0",
+    "electron-builder": "^26.15.3",
     "typescript": "^5.9.3"
-  }
+  },
+  "desktopName": "vallaury.desktop"
 }

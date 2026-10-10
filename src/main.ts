@@ -10,6 +10,10 @@ import * as device from "./device";
 import { begin, finish, startUrl, type Pending } from "./signin";
 import { DEFAULT_SIZE, load, save } from "./window-state";
 
+// Windows shows notifications and groups the taskbar button by this id; it must match the installer's.
+if (process.platform === "win32") app.setAppUserModelId("it.vallaury.desktop");
+app.setName("Vallaury");
+
 const SITE = siteUrl(process.env.VALLAURY_URL, app.isPackaged);
 const PAGE_BACKGROUND = "#F6FBF7";
 /** Permissions the site may ask for. Everything else is refused without asking (the camera, the microphone and the location are not used yet). */
