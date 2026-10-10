@@ -7,5 +7,6 @@ What the app itself does:
 
 - It has no analytics, advertising, crash reporting or tracking of any kind, and talks to no server except `app.vallaury.it`.
 - It stores, on your computer only: the website's own cookies and cache (in the app's data folder), and the size and position of the window.
+- If you turn notifications on, it asks `app.vallaury.it` every few minutes with a key of its own; nothing passes through Google, Apple or Microsoft push services. The key is stored with your system's secret store (or only in memory when the system has none) and is erased when you sign out.
 - It asks the system for no camera, microphone or location. The site may show notifications and copy to the clipboard; everything else is refused.
 - Signing in with Google opens your system browser. The app keeps a random secret in memory for ten minutes to finish the sign-in and never sends it anywhere except to `app.vallaury.it`.
