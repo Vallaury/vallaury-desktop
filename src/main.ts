@@ -1,6 +1,7 @@
 import { app, BrowserWindow, ipcMain, Menu, nativeTheme, screen, session, shell, type WebContents } from "electron";
 import { join } from "node:path";
 import { canOpenOutside, isInside, siteUrl, userAgent } from "./origin";
+import { attach as contextMenu } from "./context-menu";
 import * as device from "./device";
 import { begin, finish, startUrl, type Pending } from "./signin";
 import { DEFAULT_SIZE, load, save } from "./window-state";
@@ -36,6 +37,8 @@ if (!app.requestSingleInstanceLock()) {
 
 function start() {
     nativeTheme.themeSource = "light";
+    // Italian first; the dictionaries come with the system on macOS and are fetched by Chromium elsewhere.
+    session.defaultSession.setSpellCheckerLanguages(["it", "en-US"].filter((l) => session.defaultSession.availableSpellCheckerLanguages.includes(l)));
     const ua = userAgent(session.defaultSession.getUserAgent(), app.getVersion(), process.platform);
     session.defaultSession.setUserAgent(ua);
     session.defaultSession.setPermissionRequestHandler((contents, permission, allow) => allow(PERMISSIONS.has(permission) && isInside(contents.getURL(), SITE)));
@@ -102,6 +105,16 @@ function create() {
     w.webContents.on("did-navigate", (_e, url, status) => {
         if (status >= 500 && isInside(url, SITE)) void showError(w.webContents, url, "server");
     });
+    contextMenu(w.webContents, (url) => isInside(url, SITE));
+    // The page process died or hung: the same screen as for a lost connection, which reloads by itself.
+    w.webContents.on("render-process-gone", (_e, details) => {
+        if (details.reason !== "clean-exit") void showError(w.webContents, w.webContents.getURL(), "server");
+    });
+    // The back and forward buttons of a mouse or keyboard (Windows sends these as app commands).
+    w.on("app-command", (_e, command) => {
+        if (command === "browser-backward") w.webContents.navigationHistory.goBack();
+        if (command === "browser-forward") w.webContents.navigationHistory.goForward();
+    });
     w.webContents.on("did-navigate", () => bridge?.navigated());
     w.webContents.on("did-navigate-in-page", () => bridge?.navigated());
     void w.loadURL(SITE);
@@ -132,7 +145,7 @@ function handleLink(link: string | undefined) {
 function lockDown(contents: WebContents) {
     contents.on("will-attach-webview", (e) => e.preventDefault());
     contents.on("will-navigate", (e, url) => {
-        if (isInside(url, SITE) || url.startsWith("file:") && contents === win?.webContents) return;
+        if (isInside(url, SITE)) return;
         e.preventDefault();
         if (canOpenOutside(url)) void shell.openExternal(url);
     });
