@@ -20,10 +20,10 @@
   },
   "devDependencies": {
     "@electron/fuses": "^2.1.3",
-    "@types/node": "^22.14.0",
+    "@types/node": "^26.6.4",
     "electron": "44.7.0",
     "electron-builder": "^26.15.3",
-    "typescript": "^5.9.3"
+    "typescript": "^7.0.2"
   },
   "desktopName": "vallaury.desktop",
   "engines": {
