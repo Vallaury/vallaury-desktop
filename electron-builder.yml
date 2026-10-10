@@ -57,11 +57,9 @@ rpm:
 
 appImage:
   category: Education
-  desktop:
-    entry:
-      # The default adds --no-sandbox to every launch. AppRun already adds it by itself, and only where the system
-      # forbids user namespaces (for example Ubuntu 24.04 with its AppArmor restriction); everywhere else the sandbox stays on.
-      Exec: AppRun %U
+  # The default adds --no-sandbox to every launch from the menu. AppRun already adds it by itself, and only where the system
+  # forbids user namespaces (for example Ubuntu 24.04 with its AppArmor restriction); everywhere else the sandbox stays on.
+  executableArgs: []
 
 win:
   target:
