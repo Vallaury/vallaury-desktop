@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2 (unreleased)
+
+- Flatpak (Flathub): the manifest, store page, menu entry and screenshots are in `flatpak/`. Inside Flatpak the app no longer checks for updates (Flathub does) and starting at sign-in goes through the system's background portal.
+
 ## 0.1.1 (2026-10-10)
 
 - Windows 32-bit installer (built with Electron 43, the last version that supports 32-bit Windows; it only tells when a new version exists instead of updating itself).

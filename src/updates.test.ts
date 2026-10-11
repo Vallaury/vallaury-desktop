@@ -14,6 +14,9 @@ test("Windows installer updates itself, the portable build only tells", () => {
 test("32-bit Windows only tells", () => {
     assert.equal(modeFor({ ...base, platform: "win32", arch: "ia32" }), "notify");
 });
+test("a Flatpak is updated by Flathub", () => {
+    assert.equal(modeFor({ ...base, flatpak: true }), "off");
+});
 test("an unsigned Mac only tells, a signed one updates itself", () => {
     assert.equal(modeFor({ ...base, platform: "darwin" }), "notify");
     assert.equal(modeFor({ ...base, platform: "darwin", macSigned: true }), "auto");

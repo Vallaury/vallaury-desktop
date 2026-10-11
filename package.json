@@ -1,7 +1,7 @@
 {
   "name": "vallaury-desktop",
   "productName": "Vallaury",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Vallaury for Windows, Linux and macOS: a window around app.vallaury.it.",
   "license": "GPL-3.0-only",
   "author": "Francesco Sappa",
