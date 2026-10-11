@@ -3,7 +3,7 @@ import { app, Notification, shell } from "electron";
 /** How this installation is kept up to date. */
 export type Mode = "auto" | "notify" | "off";
 
-export const RELEASES = "https://github.com/sappafrancesco/vallaury-desktop/releases/latest";
+export const RELEASES = "https://github.com/Vallaury/vallaury-desktop/releases/latest";
 export const FIRST_CHECK_MS = 60_000;
 export const EVERY_MS = 6 * 60 * 60_000;
 

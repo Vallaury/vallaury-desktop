@@ -14,7 +14,7 @@ import { DEFAULT_SIZE, load, save } from "./window-state";
 // Windows shows notifications and groups the taskbar button by this id; it must match the installer's.
 if (process.platform === "win32") app.setAppUserModelId("it.vallaury.desktop");
 app.setName("Vallaury");
-app.setAboutPanelOptions({ applicationName: "Vallaury", applicationVersion: app.getVersion(), copyright: "© 2026 the Vallaury project. GPL-3.0-only.", website: "https://github.com/sappafrancesco/vallaury-desktop" });
+app.setAboutPanelOptions({ applicationName: "Vallaury", applicationVersion: app.getVersion(), copyright: "© 2026 the Vallaury project. GPL-3.0-only.", website: "https://github.com/Vallaury/vallaury-desktop" });
 
 const SITE = siteUrl(process.env.VALLAURY_URL, app.isPackaged);
 const PAGE_BACKGROUND = "#F6FBF7";
@@ -260,7 +260,7 @@ function buildMenu() {
                 { label: "Informazioni su Vallaury", click: () => app.showAboutPanel() },
                 ...(app.isPackaged ? [{ label: "Cerca aggiornamenti", click: () => void updater?.check(true) }] : []),
                 { label: "Informativa sulla privacy", click: () => void shell.openExternal(`${SITE}/privacy`) },
-                { label: "Segnala un problema dell'app", click: () => void shell.openExternal("https://github.com/sappafrancesco/vallaury-desktop/issues/new/choose") },
+                { label: "Segnala un problema dell'app", click: () => void shell.openExternal("https://github.com/Vallaury/vallaury-desktop/issues/new/choose") },
             ],
         },
     ]);

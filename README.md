@@ -8,7 +8,7 @@
 
 [![License: GPL v3](https://img.shields.io/badge/license-GPL--3.0--only-blue.svg)](LICENSE)
 
-[Website](https://app.vallaury.it) &nbsp;|&nbsp; [Privacy](PRIVACY.md) &nbsp;|&nbsp; [Android app](https://github.com/sappafrancesco/vallaury-android)
+[Website](https://app.vallaury.it) &nbsp;|&nbsp; [Privacy](PRIVACY.md) &nbsp;|&nbsp; [Android app](https://github.com/Vallaury/vallaury-android)
 
 </div>
 
@@ -44,7 +44,7 @@ Early releases. See [CHANGELOG.md](CHANGELOG.md).
 
 ## Install
 
-Packages are on the [releases page](https://github.com/sappafrancesco/vallaury-desktop/releases). Every release carries `SHA256SUMS` and a build provenance statement.
+Packages are on the [releases page](https://github.com/Vallaury/vallaury-desktop/releases). Every release carries `SHA256SUMS` and a build provenance statement.
 
 | System | Package | Needs |
 |---|---|---|

@@ -4,5 +4,5 @@ contact_links:
     url: https://app.vallaury.it
     about: This tracker is for the desktop app only. Use the feedback button inside the web app for the service.
   - name: Security problem
-    url: https://github.com/sappafrancesco/vallaury-desktop/security/advisories/new
+    url: https://github.com/Vallaury/vallaury-desktop/security/advisories/new
     about: Please report vulnerabilities privately, not in a public issue.

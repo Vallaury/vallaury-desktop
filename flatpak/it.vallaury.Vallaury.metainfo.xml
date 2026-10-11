@@ -32,30 +32,30 @@
 
   <screenshots>
     <screenshot type="default">
-      <image type="source" width="1920" height="1080">https://raw.githubusercontent.com/sappafrancesco/vallaury-desktop/v0.1.2/flatpak/screenshots/home.png</image>
+      <image type="source" width="1920" height="1080">https://raw.githubusercontent.com/Vallaury/vallaury-desktop/v0.1.2/flatpak/screenshots/home.png</image>
       <caption>Today at a glance: the weather, the next lesson and what is due</caption>
       <caption xml:lang="it">Oggi a colpo d'occhio: il meteo, la prossima lezione e le scadenze</caption>
     </screenshot>
     <screenshot>
-      <image type="source" width="1920" height="1080">https://raw.githubusercontent.com/sappafrancesco/vallaury-desktop/v0.1.2/flatpak/screenshots/timetable.png</image>
+      <image type="source" width="1920" height="1080">https://raw.githubusercontent.com/Vallaury/vallaury-desktop/v0.1.2/flatpak/screenshots/timetable.png</image>
       <caption>The week's timetable, with room, teacher and what is due for each lesson</caption>
       <caption xml:lang="it">L'orario della settimana, con aula, docente e scadenze di ogni lezione</caption>
     </screenshot>
     <screenshot>
-      <image type="source" width="1920" height="1080">https://raw.githubusercontent.com/sappafrancesco/vallaury-desktop/v0.1.2/flatpak/screenshots/tasks.png</image>
+      <image type="source" width="1920" height="1080">https://raw.githubusercontent.com/Vallaury/vallaury-desktop/v0.1.2/flatpak/screenshots/tasks.png</image>
       <caption>Homework split into steps you can tick off</caption>
       <caption xml:lang="it">I compiti divisi in passi da spuntare</caption>
     </screenshot>
     <screenshot>
-      <image type="source" width="1920" height="1080">https://raw.githubusercontent.com/sappafrancesco/vallaury-desktop/v0.1.2/flatpak/screenshots/exams.png</image>
+      <image type="source" width="1920" height="1080">https://raw.githubusercontent.com/Vallaury/vallaury-desktop/v0.1.2/flatpak/screenshots/exams.png</image>
       <caption>Exams of the class, in order</caption>
       <caption xml:lang="it">Le verifiche della classe, in ordine</caption>
     </screenshot>
   </screenshots>
 
   <url type="homepage">https://vallaury.it</url>
-  <url type="bugtracker">https://github.com/sappafrancesco/vallaury-desktop/issues</url>
-  <url type="vcs-browser">https://github.com/sappafrancesco/vallaury-desktop</url>
+  <url type="bugtracker">https://github.com/Vallaury/vallaury-desktop/issues</url>
+  <url type="vcs-browser">https://github.com/Vallaury/vallaury-desktop</url>
   <url type="help">https://vallaury.it/domande</url>
   <url type="contact">https://vallaury.it</url>
 

@@ -96,5 +96,5 @@ dmg:
 
 publish:
   provider: github
-  owner: sappafrancesco
+  owner: Vallaury
   repo: vallaury-desktop

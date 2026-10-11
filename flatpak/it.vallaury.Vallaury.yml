@@ -53,9 +53,9 @@ modules:
       - install -Dm644 build/icon.png /app/share/icons/hicolor/512x512/apps/it.vallaury.Vallaury.png
     sources:
       - type: git
-        url: https://github.com/sappafrancesco/vallaury-desktop.git
+        url: https://github.com/Vallaury/vallaury-desktop.git
         tag: v0.1.2
-        commit: 86fc53d14feef1a5baba10e4361e3caa72869b83
+        commit: 1f1897fd5adf458bf00251de91ebdd47b6eb5384
       - generated-sources.json
       - type: script
         dest-filename: vallaury.sh
