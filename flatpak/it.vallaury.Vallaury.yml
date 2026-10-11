@@ -55,7 +55,7 @@ modules:
       - type: git
         url: https://github.com/sappafrancesco/vallaury-desktop.git
         tag: v0.1.2
-        commit: COMMIT_OF_V0_1_2
+        commit: 86fc53d14feef1a5baba10e4361e3caa72869b83
       - generated-sources.json
       - type: script
         dest-filename: vallaury.sh
