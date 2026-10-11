@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.2 (unreleased)
+## 0.1.2 (2026-10-11)
 
 - Flatpak (Flathub): the manifest, store page, menu entry and screenshots are in `flatpak/`. Inside Flatpak the app no longer checks for updates (Flathub does) and starting at sign-in goes through the system's background portal.
 
