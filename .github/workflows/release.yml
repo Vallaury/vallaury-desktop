@@ -144,7 +144,14 @@ jobs:
         uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2.4.0
         with:
           subject-path: release/Vallaury-*
+      # The text of the release is the install guide (.github/release-notes.md) plus the CHANGELOG section of the version.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: source
+          persist-credentials: false
       - name: Publish
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release create "$GITHUB_REF_NAME" release/* --repo "$GITHUB_REPOSITORY" --title "Vallaury $GITHUB_REF_NAME" --generate-notes
+        run: |
+          node source/scripts/release-notes.mjs "$GITHUB_REF_NAME" > notes.md
+          gh release create "$GITHUB_REF_NAME" release/* --repo "$GITHUB_REPOSITORY" --title "Vallaury $GITHUB_REF_NAME" --notes-file notes.md
