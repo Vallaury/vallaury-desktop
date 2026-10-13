@@ -136,6 +136,17 @@ jobs:
         with:
           path: release
           merge-multiple: true
+      # Copies without the version in the name, so that releases/latest/download/<name> is a link that never goes stale.
+      # The updater keeps using the versioned files (latest*.yml names them).
+      - name: Stable names
+        working-directory: release
+        run: |
+          for f in Vallaury-*; do
+            case "$f" in *.blockmap) continue ;; esac
+            stable=$(echo "$f" | sed -E 's/^Vallaury-[0-9]+\.[0-9]+\.[0-9]+-/Vallaury-/')
+            cp "$f" "$stable"
+          done
+          ls
       - name: Checksums
         working-directory: release
         run: sha256sum Vallaury-* | tee SHA256SUMS

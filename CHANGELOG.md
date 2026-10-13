@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.3 (2026-10-13)
+
+- Installation guide: the README is in Italian first (English in `README.en.md`), and every release page now explains which file to download for Windows, Mac and Linux, with the steps for the first opening.
+- Every release also carries copies of the installers without the version in the name (`Vallaury-win-x64.exe`, `Vallaury-mac-universal.dmg`, `Vallaury-linux-x86_64.AppImage`, and the Arm ones), so `releases/latest/download/<name>` is a link that never goes out of date.
+- The store page and menu entry say which school Vallaury is made for (the Vallauri institute in Fossano) and that it is independent.
+
 ## 0.1.2 (2026-10-11)
 
 - Flatpak (Flathub): the manifest, store page, menu entry and screenshots are in `flatpak/`. Inside Flatpak the app no longer checks for updates (Flathub does) and starting at sign-in goes through the system's background portal.

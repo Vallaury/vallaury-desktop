@@ -26,8 +26,8 @@
       <li>Private pages such as grades are kept out of screenshots where the system allows it.</li>
       <li xml:lang="it">Le pagine private, come i voti, restano fuori dagli screenshot dove il sistema lo permette.</li>
     </ul>
-    <p>Vallaury is a free, independent project for the students and teachers of an Italian secondary school and is not the school's official platform. You need an account on vallaury.it to use it.</p>
-    <p xml:lang="it">Vallaury è un progetto gratuito e indipendente per studenti e docenti di una scuola superiore italiana e non è la piattaforma ufficiale dell'istituto. Per usarla serve un account su vallaury.it.</p>
+    <p>Vallaury is a free, independent project for the students and teachers of the I.I.S. G. Vallauri institute in Fossano, Italy. It is not the official platform of the institute and is not connected to the electronic register. You need an account on vallaury.it to use it.</p>
+    <p xml:lang="it">Vallaury è un progetto gratuito e indipendente per gli studenti e i docenti dell'I.I.S. G. Vallauri di Fossano. Non è la piattaforma ufficiale dell'istituto e non è collegato al registro elettronico. Per usarla serve un account su vallaury.it.</p>
   </description>
 
   <screenshots>
@@ -68,11 +68,15 @@
     <keyword>homework</keyword>
     <keyword>exams</keyword>
     <keyword>notes</keyword>
+    <keyword>Vallauri</keyword>
+    <keyword>Fossano</keyword>
     <keyword xml:lang="it">scuola</keyword>
     <keyword xml:lang="it">orario</keyword>
     <keyword xml:lang="it">compiti</keyword>
     <keyword xml:lang="it">verifiche</keyword>
     <keyword xml:lang="it">appunti</keyword>
+    <keyword xml:lang="it">Vallauri</keyword>
+    <keyword xml:lang="it">Fossano</keyword>
   </keywords>
 
   <content_rating type="oars-1.1">
@@ -95,6 +99,11 @@
   </branding>
 
   <releases>
+    <release version="0.1.3" date="2026-10-13">
+      <description>
+        <p>Clearer installation guide, and the store page now says which school Vallaury is made for.</p>
+      </description>
+    </release>
     <release version="0.1.2" date="2026-10-11">
       <description>
         <p>Flathub version: updates come from Flathub, and starting at sign-in uses the system's background portal.</p>

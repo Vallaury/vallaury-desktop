@@ -46,7 +46,7 @@ linux:
     entry:
       Name: Vallaury
       Comment: Orario, compiti, verifiche e appunti della tua classe
-      Keywords: scuola;orario;compiti;appunti;
+      Keywords: scuola;orario;compiti;appunti;Vallauri;Fossano;
       StartupWMClass: Vallaury
       MimeType: x-scheme-handler/vallaury
 
