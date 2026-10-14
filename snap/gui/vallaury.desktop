@@ -1,0 +1,16 @@
+[Desktop Entry]
+Type=Application
+Name=Vallaury
+GenericName=School companion
+GenericName[it]=Compagno di scuola
+Comment=Timetable, homework, exams and notes of your class
+Comment[it]=Orario, compiti, verifiche e appunti della tua classe
+Exec=vallaury %U
+Icon=${SNAP}/meta/gui/vallaury.png
+Terminal=false
+Categories=Education;
+Keywords=school;timetable;homework;exams;notes;Vallauri;Fossano;
+Keywords[it]=scuola;orario;compiti;verifiche;appunti;Vallauri;Fossano;
+MimeType=x-scheme-handler/vallaury;
+StartupNotify=true
+StartupWMClass=Vallaury

@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Snap Store package (`snap/`): strict confinement, amd64 and arm64, built and sent to the store by the release workflow. Updates come from the store, and starting at sign-in is written in the snap's own data folder.
+
 ## 0.1.3 (2026-10-13)
 
 - Installation guide: the README is in Italian first (English in `README.en.md`), and every release page now explains which file to download for Windows, Mac and Linux, with the steps for the first opening.

@@ -7,7 +7,9 @@ import { autostartEntry } from "./background";
 import * as store from "./store";
 
 /** Start when the person signs in to the computer, hidden in the tray. Windows and macOS have a system call; Linux uses the freedesktop autostart folder. */
-const linuxFile = () => join(process.env.XDG_CONFIG_HOME || join(homedir(), ".config"), "autostart", "it.vallaury.desktop.desktop");
+/** Inside a Snap the app may only write in its own data folder; snapd reads the autostart entries from there. */
+const snapData = process.env.SNAP && process.env.SNAP_USER_DATA;
+const linuxFile = () => (snapData ? join(snapData, ".config", "autostart", "vallaury.desktop") : join(process.env.XDG_CONFIG_HOME || join(homedir(), ".config"), "autostart", "it.vallaury.desktop.desktop"));
 
 /** Inside Flatpak the app cannot write to the autostart folder: the system's background portal does it, and cannot be asked afterwards, so the choice is remembered here. */
 const sandboxed = Boolean(process.env.FLATPAK_ID);
@@ -33,7 +35,7 @@ export function set(on: boolean): boolean {
             if (!on) rmSync(linuxFile(), { force: true });
             else {
                 mkdirSync(dirname(linuxFile()), { recursive: true });
-                const exec = process.env.APPIMAGE ? [process.env.APPIMAGE] : app.isPackaged ? [process.execPath] : [process.execPath, app.getAppPath()];
+                const exec = snapData ? ["vallaury"] : process.env.APPIMAGE ? [process.env.APPIMAGE] : app.isPackaged ? [process.execPath] : [process.execPath, app.getAppPath()];
                 writeFileSync(linuxFile(), autostartEntry(exec));
             }
         } else {

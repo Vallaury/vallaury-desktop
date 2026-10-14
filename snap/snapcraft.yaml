@@ -1,0 +1,79 @@
+name: vallaury
+title: Vallaury
+base: core24
+adopt-info: vallaury
+summary: Orario, compiti, verifiche e appunti della tua classe
+description: |
+  Vallaury riunisce in un posto solo, con calma, l'orario, i compiti, le verifiche e gli appunti della tua classe.
+  Questa è la sua app per computer: il servizio in una finestra tutta sua, con ciò che una scheda del browser non sa fare.
+
+  - Notifiche su orario e compiti anche a browser chiuso, senza alcun servizio di notifica esterno.
+  - Accesso con Google attraverso il tuo browser, oppure con un codice via e-mail.
+  - Un'icona nell'area di notifica e l'avvio facoltativo quando accedi al computer.
+  - Le pagine private, come i voti, restano fuori dagli screenshot dove il sistema lo permette.
+
+  Vallaury è un progetto gratuito e indipendente per gli studenti e i docenti dell'I.I.S. G. Vallauri di Fossano. Non è la piattaforma ufficiale dell'istituto e non è collegato al registro elettronico. Per usarla serve un account su vallaury.it.
+
+  Vallaury brings the timetable, homework, exams and notes of your class together in one calm place. This is its desktop app: the service in a window of its own. It is a free, independent project for the students and teachers of the I.I.S. G. Vallauri institute in Fossano, Italy, and not the official platform of the institute. You need an account on vallaury.it to use it.
+license: GPL-3.0-only
+website: https://vallaury.it
+contact: https://vallaury.it/domande
+issues: https://github.com/Vallaury/vallaury-desktop/issues
+source-code: https://github.com/Vallaury/vallaury-desktop
+icon: snap/gui/vallaury.png
+grade: stable
+confinement: strict
+compression: lzo
+
+platforms:
+  amd64:
+  arm64:
+
+# The updates come from the Snap Store, not from the app (src/updates.ts turns its own updater off when SNAP is set).
+apps:
+  vallaury:
+    command: vallaury/vallaury --no-sandbox
+    extensions: [gnome]
+    desktop: meta/gui/vallaury.desktop
+    environment:
+      TMPDIR: $XDG_RUNTIME_DIR
+    plugs:
+      - desktop
+      - desktop-legacy
+      - wayland
+      - x11
+      - unity7
+      - opengl
+      - network
+      - audio-playback
+      - browser-support
+      - password-manager-service
+
+parts:
+  vallaury:
+    plugin: nil
+    source: .
+    build-snaps:
+      - node/22/stable
+    build-packages:
+      - libsecret-1-dev
+    stage-packages:
+      - libnss3
+      - libnotify4
+      - libxss1
+      - libxtst6
+      - libsecret-1-0
+      - libatspi2.0-0t64
+      - libgbm1
+      - xdg-utils
+    override-build: |
+      npm ci
+      npm test
+      case "$CRAFT_ARCH_BUILD_FOR" in
+        amd64) arch=--x64 ;;
+        arm64) arch=--arm64 ;;
+      esac
+      npx electron-builder --linux --dir --publish never $arch
+      mkdir -p "$CRAFT_PART_INSTALL/vallaury"
+      cp -a out/linux-*unpacked/. "$CRAFT_PART_INSTALL/vallaury/"
+      craftctl set version="$(node -p "require('./package.json').version")"
