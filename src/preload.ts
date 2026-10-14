@@ -26,6 +26,7 @@ contextBridge.exposeInMainWorld(
         notifications: Object.freeze({
             status: () => ask("notify-status"),
             enable: () => ask("notify-enable"),
+            disable: () => ask("notify-disable"),
         }),
     }),
 );

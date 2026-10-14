@@ -50,7 +50,7 @@ modules:
       - install -Dm755 vallaury.sh /app/bin/vallaury
       - install -Dm644 flatpak/it.vallaury.Vallaury.desktop /app/share/applications/it.vallaury.Vallaury.desktop
       - install -Dm644 flatpak/it.vallaury.Vallaury.metainfo.xml /app/share/metainfo/it.vallaury.Vallaury.metainfo.xml
-      - install -Dm644 build/icon.png /app/share/icons/hicolor/512x512/apps/it.vallaury.Vallaury.png
+      - install -Dm644 build/icon.png /app/share/icons/hicolor/1024x1024/apps/it.vallaury.Vallaury.png
     sources:
       - type: git
         url: https://github.com/Vallaury/vallaury-desktop.git

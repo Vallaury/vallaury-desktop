@@ -15,7 +15,7 @@ test("the tray is trusted on Windows and macOS, and on Linux except GNOME", () =
 });
 
 test("closing the window keeps the app only when something needs it", () => {
-    const all = { background: true, usable: true, linked: true, notifications: true };
+    const all = { background: true, linked: true, notifications: true };
     assert.equal(keepsRunning(all), true);
     for (const k of Object.keys(all) as (keyof typeof all)[]) assert.equal(keepsRunning({ ...all, [k]: false }), false, k);
 });

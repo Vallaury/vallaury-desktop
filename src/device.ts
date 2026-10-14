@@ -149,11 +149,19 @@ export function setUp(opts: { site: string; window: () => BrowserWindow | null; 
         return { ok };
     });
 
-    ipcMain.handle("notify-status", (e) => (trusted(e) ? { ok: true, enabled: enabled() } : { ok: false }));
+    ipcMain.handle("notify-status", (e) => (trusted(e) ? { ok: true, enabled: enabled(), linked: Boolean(store.key()), supported: Notification.isSupported() } : { ok: false }));
 
     ipcMain.handle("notify-enable", (e) => {
-        if (!trusted(e) || !Notification.isSupported()) return { ok: false };
+        if (!trusted(e)) return { ok: false };
+        // Told apart so the page can say what is wrong: no notification service on this desktop, or this computer not linked to the account yet.
+        if (!Notification.isSupported()) return { ok: false, reason: "unsupported" };
         setNotifications(true);
+        return { ok: true, linked: Boolean(store.key()) };
+    });
+
+    ipcMain.handle("notify-disable", (e) => {
+        if (!trusted(e)) return { ok: false };
+        setNotifications(false);
         return { ok: true };
     });
 

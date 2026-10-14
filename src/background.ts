@@ -12,9 +12,12 @@ export function trayUsable(platform: NodeJS.Platform, desktop: string | undefine
     return names.length > 0 && names[0] !== "" && !names.includes("gnome") && !names.includes("ubuntu");
 }
 
-/** Closing the window hides it only when there is something to keep running for: a linked computer with notifications on. */
-export function keepsRunning(o: { background: boolean; usable: boolean; linked: boolean; notifications: boolean }): boolean {
-    return o.background && o.usable && o.linked && o.notifications;
+/**
+ * Closing the window hides it only when there is something to keep running for: a linked computer with notifications on.
+ * Without a tray icon (GNOME) it still keeps running: the app is reopened from the menu, and Ctrl+Q closes it for real.
+ */
+export function keepsRunning(o: { background: boolean; linked: boolean; notifications: boolean }): boolean {
+    return o.background && o.linked && o.notifications;
 }
 
 /** The autostart entry for Linux desktops (freedesktop autostart). Paths with spaces are quoted. */

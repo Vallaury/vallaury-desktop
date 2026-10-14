@@ -30,7 +30,7 @@ let updater: ReturnType<typeof updates.start> | null = null;
 
 const usable = () => trayUsable(process.platform, process.env.XDG_CURRENT_DESKTOP, process.env.VALLAURY_TRAY);
 /** Closing the window hides it (instead of quitting) when a linked computer has notifications to deliver. */
-const staysInBackground = () => keepsRunning({ background: store.get().background, usable: usable(), linked: Boolean(bridge?.notifications.linked()), notifications: Boolean(bridge?.notifications.get()) });
+const staysInBackground = () => keepsRunning({ background: store.get().background, linked: Boolean(bridge?.notifications.linked()), notifications: Boolean(bridge?.notifications.get()) });
 
 if (!app.requestSingleInstanceLock()) {
     app.quit();
@@ -148,12 +148,19 @@ function create() {
         // Said once, when it first happens: the app is still there, and how to really close it.
         if (!store.get().noted) {
             store.set({ noted: true });
-            const where = process.platform === "darwin" ? "l'icona nella barra dei menu" : "l'icona nella barra di sistema";
-            bridge?.tell("Vallaury resta attivo", `Ti avvisa dei cambiamenti anche a finestra chiusa. Per chiuderlo davvero usa ${where} e scegli Esci.`);
+            const how = !usable() ? "premi Ctrl+Q" : `usa ${process.platform === "darwin" ? "l'icona nella barra dei menu" : "l'icona nella barra di sistema"} e scegli Esci`;
+            bridge?.tell("Vallaury resta attivo", `Ti avvisa dei cambiamenti anche a finestra chiusa. Per chiuderlo davvero ${how}.`);
         }
     });
     // Windows: the system is shutting down, so closing must not be held back.
     w.on("query-session-end" as never, () => (quitting = true));
+    // Without a tray there is no "Quit" entry, so Ctrl+Q is the way out.
+    w.webContents.on("before-input-event", (event, input) => {
+        if (input.type === "keyDown" && input.control && !input.alt && !input.shift && input.key.toLowerCase() === "q" && process.platform !== "darwin") {
+            event.preventDefault();
+            app.quit();
+        }
+    });
     w.on("focus", () => trayIcon?.setUnread(0));
     w.on("show", () => trayIcon?.setUnread(0));
     w.on("resized", remember);
