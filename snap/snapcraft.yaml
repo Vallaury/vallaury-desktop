@@ -34,7 +34,6 @@ apps:
   vallaury:
     command: vallaury/vallaury --no-sandbox
     extensions: [gnome]
-    desktop: meta/gui/vallaury.desktop
     environment:
       TMPDIR: $XDG_RUNTIME_DIR
     plugs:

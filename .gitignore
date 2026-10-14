@@ -10,3 +10,7 @@ node_modules/
 *.pem
 .env
 out32/
+*.snap
+parts/
+prime/
+stage/
