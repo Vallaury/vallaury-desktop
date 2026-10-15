@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { test } from "node:test";
-import { begin, finish, PROOF_MS, startUrl } from "./signin";
+import { begin, finish, isPlainStart, PROOF_MS, startUrl } from "./signin";
 
 const SITE = "https://app.vallaury.it";
 const CODE = "A".repeat(32);
@@ -28,4 +28,11 @@ test("nothing is accepted without a sign-in we started, or when it is too old or
     assert.equal(finish(`vallaury://widget-link?code=${CODE}`, p, SITE, 1), null);
     assert.equal(finish(`https://evil.example/?code=${CODE}`, p, SITE, 1), null);
     assert.equal(finish("not a url", p, SITE, 1), null);
+});
+
+test("the plain Google start address is recognised, the one with a challenge is not", () => {
+    assert.equal(isPlainStart(`${SITE}/api/auth/google/start`, SITE), true);
+    assert.equal(isPlainStart(`${SITE}/api/auth/google/start?app=${"A".repeat(43)}`, SITE), false);
+    assert.equal(isPlainStart("https://evil.example/api/auth/google/start", SITE), false);
+    assert.equal(isPlainStart("nonsense", SITE), false);
 });
