@@ -33,3 +33,13 @@ export function finish(link: string, pending: Pending | null, site: string, now 
     if (!CODE.test(code)) return null;
     return `${site}/api/auth/app?code=${encodeURIComponent(code)}&proof=${encodeURIComponent(pending.proof)}`;
 }
+
+/** True for the site's plain Google start address. Reaching it from inside the window would sign the browser in, not the app. */
+export function isPlainStart(url: string, site: string): boolean {
+    try {
+        const u = new URL(url);
+        return u.origin === new URL(site).origin && u.pathname === "/api/auth/google/start" && !u.searchParams.has("app");
+    } catch {
+        return false;
+    }
+}

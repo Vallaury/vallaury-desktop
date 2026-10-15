@@ -7,7 +7,7 @@ import * as store from "./store";
 import * as tray from "./tray";
 import { attach as contextMenu } from "./context-menu";
 import * as device from "./device";
-import { begin, finish, startUrl, type Pending } from "./signin";
+import { begin, finish, isPlainStart, startUrl, type Pending } from "./signin";
 import * as updates from "./updates";
 import { DEFAULT_SIZE, load, save } from "./window-state";
 
@@ -65,8 +65,7 @@ function start() {
         // Only the site's own page, in the top frame, may start it.
         const frame = event.senderFrame;
         if (!frame || frame !== event.sender.mainFrame || !isInside(frame.url, SITE)) return;
-        pending = begin();
-        void shell.openExternal(startUrl(SITE, pending));
+        startGoogle();
     });
     Menu.setApplicationMenu(buildMenu());
     trayIcon = tray.create({
@@ -214,16 +213,29 @@ function handleLink(link: string | undefined) {
     void win?.webContents.loadURL(next);
 }
 
+/** The Google step always goes through the hand-back, even when the page links to it directly (a click before the page is ready, an old cached page). */
+function startGoogle() {
+    pending = begin();
+    void shell.openExternal(startUrl(SITE, pending));
+}
+
 /** Every window the app ever makes: stays on the site, hands the rest to the system browser, accepts no embedded views. */
 function lockDown(contents: WebContents) {
     contents.on("will-attach-webview", (e) => e.preventDefault());
     contents.on("will-navigate", (e, url) => {
+        if (isPlainStart(url, SITE)) {
+            e.preventDefault();
+            startGoogle();
+            return;
+        }
         if (isInside(url, SITE)) return;
         e.preventDefault();
         if (canOpenOutside(url)) void shell.openExternal(url);
     });
     contents.setWindowOpenHandler(({ url }) => {
-        if (isInside(url, SITE)) {
+        if (isPlainStart(url, SITE)) {
+            startGoogle();
+        } else if (isInside(url, SITE)) {
             setImmediate(() => void win?.webContents.loadURL(url));
         } else if (canOpenOutside(url)) {
             void shell.openExternal(url);
