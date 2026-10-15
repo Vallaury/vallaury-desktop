@@ -1,7 +1,10 @@
 # Changelog
 
-## Unreleased
+## 0.1.4 (2026-10-15)
 
+- Signing in with Google now always ends inside the app. If the sign-in address was reached directly (a click before the page was ready, or an old copy of the page), the browser used to be signed in instead of the app; the app now catches that address and starts the hand-back itself.
+- Rounded app icon, and the app can stay in the background without a tray icon (Ctrl+Q quits).
+- Notifications can be switched on and off from the app, with the reason shown when they cannot be enabled.
 - Snap Store package (`snap/`): strict confinement, amd64 and arm64, built and sent to the store by the release workflow. Updates come from the store, and starting at sign-in is written in the snap's own data folder.
 
 ## 0.1.3 (2026-10-13)
