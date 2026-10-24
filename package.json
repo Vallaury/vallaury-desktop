@@ -38,6 +38,6 @@
     "url": "https://github.com/Vallaury/vallaury-desktop/issues"
   },
   "dependencies": {
-    "electron-updater": "6.8.9"
+    "electron-updater": "6.8.11"
   }
 }
