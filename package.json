@@ -23,7 +23,7 @@
     "@electron/fuses": "^2.1.3",
     "@types/node": "^22.14.0",
     "electron": "44.7.0",
-    "electron-builder": "^26.15.3",
+    "electron-builder": "^26.18.0",
     "typescript": "^5.9.3"
   },
   "desktopName": "vallaury.desktop",
