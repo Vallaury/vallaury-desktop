@@ -10,6 +10,7 @@ import * as device from "./device";
 import { isSigninLink, linkIn, openTarget } from "./deeplink";
 import { begin, finish, isPlainStart, passkeyUrl, startUrl, type Pending } from "./signin";
 import * as updates from "./updates";
+import { startHiddenAfterUpdate } from "./update-policy";
 import { DEFAULT_SIZE, load, save } from "./window-state";
 
 // Windows shows notifications and groups the taskbar button by this id; it must match the installer's.
@@ -110,7 +111,7 @@ function start() {
     });
     create();
     bridge.start();
-    updater = updates.start({ beforeInstall: () => (quitting = true) });
+    updater = updates.start({ site: SITE, beforeInstall: () => (quitting = true), windowHidden: () => !win || win.isDestroyed() || !win.isVisible() || win.isMinimized() });
     handleLink(early ?? linkIn(process.argv.slice(1), SITE));
 }
 
@@ -145,7 +146,9 @@ function create() {
     if (remembered?.maximized) win.maximize();
     const w = win;
     // Shown once the first page is painted, so the window never opens as a blank sheet.
-    const hidden = autostart.startedHidden() && staysInBackground();
+    // Also hidden after the app restarted itself to install an update while nobody was looking: the update must not pop a window up.
+    const hidden = (autostart.startedHidden() || startHiddenAfterUpdate({ mark: store.get().quietAt, now: Date.now() })) && staysInBackground();
+    if (store.get().quietAt) store.set({ quietAt: 0 });
     w.once("ready-to-show", () => (hidden ? undefined : w.show()));
     const remember = () => {
         if (w.isDestroyed() || w.isMinimized() || w.isFullScreen()) return;

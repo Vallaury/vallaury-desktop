@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Updates are now passive. Windows and the Linux AppImage look for a release shortly after the start, about every four hours (spread out, with a back-off after failures), when the window gets focus and when the computer wakes up. The new version is downloaded in the background and installed when the app is closed, or by itself after the window has been hidden in the tray for ten minutes (the window then stays hidden after the restart). A visible window is never interrupted, and there is no notification on this path.
+- Installations that cannot update themselves (deb, rpm, unsigned Mac, portable) are told once per version instead of once per start.
+- The Profile shows where the update stands (looking, downloading, ready) with "Check now", "Restart now" and "Download" where they make sense. Needs the matching site version.
+
 ## 0.1.5 (2026-11-02)
 
 - Passkeys: Linux and macOS have no passkey prompt for an embedded window, so "Sign in with a passkey" now opens the system browser, which asks for the passkey and hands a one-time code back to the app (the same hand-back as Google). Windows keeps its own prompt in the window. Needs the matching site version.

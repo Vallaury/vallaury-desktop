@@ -26,6 +26,12 @@ contextBridge.exposeInMainWorld(
             get: () => ask("desktop-get"),
             set: (change: { autostart?: boolean; background?: boolean }) => ask("desktop-set", { autostart: change?.autostart, background: change?.background }),
         }),
+        updates: Object.freeze({
+            status: () => ask("updates-status"),
+            check: () => ask("updates-check"),
+            install: () => ask("updates-install"),
+            open: () => ask("updates-open"),
+        }),
         notifications: Object.freeze({
             status: () => ask("notify-status"),
             enable: () => ask("notify-enable"),

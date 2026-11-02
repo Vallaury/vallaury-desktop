@@ -4,12 +4,12 @@ import { join } from "node:path";
 
 /**
  * What the app remembers besides the website's own cookies: whose computer this is, whether the person removed it on purpose,
- * the notifications switch, and the key. The key is kept with the system's secret store (DPAPI, Keychain, libsecret). Where the
+ * the notifications switch, the last update announced (told), when the app last restarted itself while hidden (quietAt), and the key. The key is kept with the system's secret store (DPAPI, Keychain, libsecret). Where the
  * system has none worth the name, the key lives in memory only: notifications then work until the app closes, and nothing readable is written.
  */
-export type Settings = { uid: number; removed: boolean; notify: boolean; protect: boolean; background: boolean; login: boolean; noted: boolean; cursor: number | null; at: number };
+export type Settings = { uid: number; removed: boolean; notify: boolean; protect: boolean; background: boolean; login: boolean; noted: boolean; told: string; quietAt: number; cursor: number | null; at: number };
 
-const DEFAULTS: Settings = { uid: 0, removed: false, notify: false, protect: true, background: true, login: false, noted: false, cursor: null, at: 0 };
+const DEFAULTS: Settings = { uid: 0, removed: false, notify: false, protect: true, background: true, login: false, noted: false, told: "", quietAt: 0, cursor: null, at: 0 };
 const file = (name: string) => join(app.getPath("userData"), name);
 
 let settings: Settings | null = null;
