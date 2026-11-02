@@ -99,6 +99,11 @@
   </branding>
 
   <releases>
+    <release version="0.1.6" date="2026-11-02">
+      <description>
+        <p>Updates are now quiet and automatic where the app can update itself, and the Profile shows where they stand.</p>
+      </description>
+    </release>
     <release version="0.1.5" date="2026-11-02">
       <description>
         <p>Passkey sign-in now works on Linux and macOS through the browser, and links to pages of the site open in the app.</p>

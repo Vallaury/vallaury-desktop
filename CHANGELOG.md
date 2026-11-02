@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.1.6 (2026-11-02)
 
 - Updates are now passive. Windows and the Linux AppImage look for a release shortly after the start, about every four hours (spread out, with a back-off after failures), when the window gets focus and when the computer wakes up. The new version is downloaded in the background and installed when the app is closed, or by itself after the window has been hidden in the tray for ten minutes (the window then stays hidden after the restart). A visible window is never interrupted, and there is no notification on this path.
 - Installations that cannot update themselves (deb, rpm, unsigned Mac, portable) are told once per version instead of once per start.
