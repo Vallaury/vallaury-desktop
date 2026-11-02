@@ -12,6 +12,9 @@ contextBridge.exposeInMainWorld(
     Object.freeze({
         platform: "desktop" as const,
         signInWithGoogle: () => void ipcRenderer.invoke("google-signin"),
+        signInWithPasskey: () => void ipcRenderer.invoke("passkey-signin"),
+        // Windows can show its own passkey prompt in the window; Linux and macOS cannot, so the browser does it.
+        passkeys: Object.freeze({ inWindow: process.platform === "win32" }),
         configure: (settings: { protectScreen: boolean }) => void ipcRenderer.invoke("configure", { protectScreen: Boolean(settings?.protectScreen) }),
         phoneLink: Object.freeze({
             status: () => ask("link-status"),

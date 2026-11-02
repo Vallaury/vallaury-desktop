@@ -7,7 +7,8 @@ import * as store from "./store";
 import * as tray from "./tray";
 import { attach as contextMenu } from "./context-menu";
 import * as device from "./device";
-import { begin, finish, isPlainStart, startUrl, type Pending } from "./signin";
+import { isSigninLink, linkIn, openTarget } from "./deeplink";
+import { begin, finish, isPlainStart, passkeyUrl, startUrl, type Pending } from "./signin";
 import * as updates from "./updates";
 import { DEFAULT_SIZE, load, save } from "./window-state";
 
@@ -23,6 +24,7 @@ const PERMISSIONS = new Set(["notifications", "clipboard-sanitized-write", "full
 
 let win: BrowserWindow | null = null;
 let quitting = false;
+let early: string | undefined;
 let pending: Pending | null = null;
 let bridge: ReturnType<typeof device.setUp> | null = null;
 let trayIcon: ReturnType<typeof tray.create> | null = null;
@@ -37,10 +39,15 @@ if (!app.requestSingleInstanceLock()) {
 } else {
     app.on("second-instance", (_event, argv) => {
         show();
-        handleLink(argv.find((a) => a.startsWith("vallaury://")));
+        handleLink(linkIn(argv.slice(1), SITE));
     });
     app.on("open-url", (event, url) => {
         event.preventDefault();
+        // macOS can deliver the link that started the app before it is ready: it waits, and is handled once the window exists.
+        if (!app.isReady()) {
+            early = url;
+            return;
+        }
         show();
         handleLink(url);
     });
@@ -66,6 +73,11 @@ function start() {
         const frame = event.senderFrame;
         if (!frame || frame !== event.sender.mainFrame || !isInside(frame.url, SITE)) return;
         startGoogle();
+    });
+    ipcMain.handle("passkey-signin", (event) => {
+        const frame = event.senderFrame;
+        if (!frame || frame !== event.sender.mainFrame || !isInside(frame.url, SITE)) return;
+        startPasskey();
     });
     Menu.setApplicationMenu(buildMenu());
     trayIcon = tray.create({
@@ -99,7 +111,7 @@ function start() {
     create();
     bridge.start();
     updater = updates.start({ beforeInstall: () => (quitting = true) });
-    handleLink(process.argv.find((a) => a.startsWith("vallaury://")));
+    handleLink(early ?? linkIn(process.argv.slice(1), SITE));
 }
 
 /** The icon in the tray follows the setting (and whether this desktop can show one). */
@@ -207,10 +219,27 @@ function show() {
 /** Links of the form vallaury://... come from the system: the browser coming back from Google, later a notification. */
 function handleLink(link: string | undefined) {
     if (!link) return;
+    const target = openTarget(link, SITE);
+    if (target) {
+        show();
+        void win?.webContents.loadURL(target);
+        return;
+    }
     const next = finish(link, pending, SITE);
-    if (!next) return;
+    if (!next) {
+        // A sign-in link arrived that this app did not ask for, or too late: say so, so the person is not left waiting.
+        if (isSigninLink(link)) bridge?.tell("Accesso non completato", "Il collegamento è scaduto o non era per questa app. Riprova dalla pagina di accesso.");
+        return;
+    }
     pending = null;
+    show();
     void win?.webContents.loadURL(next);
+}
+
+/** Passkey sign-in: the system browser asks for the passkey and hands a one-time code back, exactly like Google. */
+function startPasskey() {
+    pending = begin();
+    void shell.openExternal(passkeyUrl(SITE, pending));
 }
 
 /** The Google step always goes through the hand-back, even when the page links to it directly (a click before the page is ready, an old cached page). */
@@ -235,6 +264,9 @@ function lockDown(contents: WebContents) {
     contents.setWindowOpenHandler(({ url }) => {
         if (isPlainStart(url, SITE)) {
             startGoogle();
+        } else if (url === "about:blank") {
+            // A page the site fills itself (a print view): allowed as a plain, locked-down window of the app.
+            return { action: "allow", overrideBrowserWindowOptions: { autoHideMenuBar: true, webPreferences: { contextIsolation: true, sandbox: true, nodeIntegration: false } } };
         } else if (isInside(url, SITE)) {
             setImmediate(() => void win?.webContents.loadURL(url));
         } else if (canOpenOutside(url)) {

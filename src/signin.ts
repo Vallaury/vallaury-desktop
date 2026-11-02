@@ -17,6 +17,9 @@ export function begin(now = Date.now()): Pending {
     return { proof, challenge: createHash("sha256").update(proof).digest("base64url"), at: now };
 }
 
+/** The passkey is proved in the system browser (the embedded window has no authenticator on Linux and macOS) and comes back the same way. */
+export const passkeyUrl = (site: string, p: Pending) => `${site}/login/passkey?app=${p.challenge}`;
+
 export const startUrl = (site: string, p: Pending) => `${site}/api/auth/google/start?app=${p.challenge}`;
 
 /** The address that makes the session in this window, or null when the link is not the one we are waiting for. */
