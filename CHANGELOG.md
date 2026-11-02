@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.5 (2026-11-02)
+
+- Passkeys: Linux and macOS have no passkey prompt for an embedded window, so "Sign in with a passkey" now opens the system browser, which asks for the passkey and hands a one-time code back to the app (the same hand-back as Google). Windows keeps its own prompt in the window. Needs the matching site version.
+- Links: `vallaury://open?path=/page` and the site's own `https://app.vallaury.it/...` addresses open that page in the running app (also when the app was started by the link, on macOS too). Nothing outside the site can come out of such a link. A sign-in link that is too old now says so instead of doing nothing.
+- Pages that open a blank window and fill it themselves (print views) now work; other windows stay locked down.
+
 ## 0.1.4 (2026-10-15)
 
 - Signing in with Google now always ends inside the app. If the sign-in address was reached directly (a click before the page was ready, or an old copy of the page), the browser used to be signed in instead of the app; the app now catches that address and starts the hand-back itself.

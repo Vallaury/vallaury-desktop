@@ -99,6 +99,11 @@
   </branding>
 
   <releases>
+    <release version="0.1.5" date="2026-11-02">
+      <description>
+        <p>Passkey sign-in now works on Linux and macOS through the browser, and links to pages of the site open in the app.</p>
+      </description>
+    </release>
     <release version="0.1.4" date="2026-10-15">
       <description>
         <p>Signing in with Google now always ends inside the app, and the app icon is rounded.</p>
