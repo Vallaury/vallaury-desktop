@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.7 (2026-11-04)
+
+- A new version of the app now starts from clean kept files: the service worker and its caches are emptied once per version, so the app never keeps running on the scripts of the one before. Sign-in is not affected.
+- A window that stops answering is restarted after ten seconds and shows the usual screen that reloads by itself, instead of staying frozen.
+- Pairs with the site's new handling of slow connections and old open pages.
+
 ## 0.1.6 (2026-11-02)
 
 - Updates are now passive. Windows and the Linux AppImage look for a release shortly after the start, about every four hours (spread out, with a back-off after failures), when the window gets focus and when the computer wakes up. The new version is downloaded in the background and installed when the app is closed, or by itself after the window has been hidden in the tray for ten minutes (the window then stays hidden after the restart). A visible window is never interrupted, and there is no notification on this path.
