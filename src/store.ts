@@ -7,9 +7,9 @@ import { join } from "node:path";
  * the notifications switch, the last update announced (told), when the app last restarted itself while hidden (quietAt), and the key. The key is kept with the system's secret store (DPAPI, Keychain, libsecret). Where the
  * system has none worth the name, the key lives in memory only: notifications then work until the app closes, and nothing readable is written.
  */
-export type Settings = { uid: number; removed: boolean; notify: boolean; protect: boolean; background: boolean; login: boolean; noted: boolean; told: string; quietAt: number; cursor: number | null; at: number };
+export type Settings = { uid: number; removed: boolean; notify: boolean; protect: boolean; background: boolean; login: boolean; noted: boolean; told: string; quietAt: number; cursor: number | null; at: number; ran: string };
 
-const DEFAULTS: Settings = { uid: 0, removed: false, notify: false, protect: true, background: true, login: false, noted: false, told: "", quietAt: 0, cursor: null, at: 0 };
+const DEFAULTS: Settings = { uid: 0, removed: false, notify: false, protect: true, background: true, login: false, noted: false, told: "", quietAt: 0, cursor: null, at: 0, ran: "" };
 const file = (name: string) => join(app.getPath("userData"), name);
 
 let settings: Settings | null = null;

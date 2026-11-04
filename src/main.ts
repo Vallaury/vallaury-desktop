@@ -109,10 +109,24 @@ function start() {
             if (state === "completed") bridge?.saved(item.getSavePath(), item.getFilename());
         });
     });
-    create();
-    bridge.start();
-    updater = updates.start({ site: SITE, beforeInstall: () => (quitting = true), windowHidden: () => !win || win.isDestroyed() || !win.isVisible() || win.isMinimized() });
-    handleLink(early ?? linkIn(process.argv.slice(1), SITE));
+    // A new version of the app starts from clean kept files (service worker, its caches, the HTTP cache), so it never runs on the scripts of the one before. Sign-in cookies stay.
+    void forgetOldFiles().finally(() => {
+        create();
+        bridge?.start();
+        updater = updates.start({ site: SITE, beforeInstall: () => (quitting = true), windowHidden: () => !win || win.isDestroyed() || !win.isVisible() || win.isMinimized() });
+        handleLink(early ?? linkIn(process.argv.slice(1), SITE));
+    });
+}
+
+async function forgetOldFiles() {
+    if (store.get().ran === app.getVersion()) return;
+    try {
+        await session.defaultSession.clearCache();
+        await session.defaultSession.clearStorageData({ storages: ["serviceworkers", "cachestorage"] });
+    } catch {
+        /* the files are then simply replaced as they change */
+    }
+    store.set({ ran: app.getVersion() });
 }
 
 /** The icon in the tray follows the setting (and whether this desktop can show one). */
@@ -197,6 +211,15 @@ function create() {
     w.webContents.on("render-process-gone", (_e, details) => {
         if (details.reason !== "clean-exit") void showError(w.webContents, w.webContents.getURL(), "server");
     });
+    // The page stopped answering: after ten seconds it is restarted, which ends in the same screen (it reloads by itself) instead of a window that never responds.
+    let stuck: ReturnType<typeof setTimeout> | undefined;
+    w.on("unresponsive", () => {
+        clearTimeout(stuck);
+        stuck = setTimeout(() => {
+            if (!w.isDestroyed()) w.webContents.forcefullyCrashRenderer();
+        }, 10_000);
+    });
+    w.on("responsive", () => clearTimeout(stuck));
     // The back and forward buttons of a mouse or keyboard (Windows sends these as app commands).
     w.on("app-command", (_e, command) => {
         if (command === "browser-backward") w.webContents.navigationHistory.goBack();
