@@ -65,7 +65,14 @@ appImage:
 win:
   target:
     - { target: nsis, arch: [x64, arm64] }
+    # For computers where nothing can be installed (school PCs without administrator rights): a single .exe that starts with a
+    # double click, and a zip that is unpacked into any folder the person may write to and starts without extracting anything.
+    - { target: portable, arch: [x64] }
+    - { target: zip, arch: [x64] }
   # Signed in CI when a certificate is configured (see .github/workflows/release.yml); otherwise unsigned.
+portable:
+  artifactName: Vallaury-${version}-win-x64-portable.${ext}
+  requestExecutionLevel: user
 nsis:
   # One installer per processor (about 100 MB each) instead of a 200 MB one that carries both.
   buildUniversalInstaller: false

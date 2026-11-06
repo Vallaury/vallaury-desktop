@@ -34,6 +34,14 @@ export function modeFor(o: { platform: NodeJS.Platform; arch?: string; packaged:
 }
 
 /**
+ * A Windows copy that was not put there by the installer (the zip unpacked by hand): the installer leaves `Uninstall Vallaury.exe`
+ * next to the program, a plain folder does not. Such a copy must not run the NSIS updater, which would install a second, different copy.
+ */
+export function isUnpackedWindows(o: { platform: NodeJS.Platform; packaged: boolean; uninstallerExists: boolean }): boolean {
+    return o.platform === "win32" && o.packaged && !o.uninstallerExists;
+}
+
+/**
  * Time until the next look. Normally about every four hours, spread by up to 15% either way so that the school's computers,
  * which all start together, do not ask together. After failures (no network, no release yet) it backs off from five minutes up to the normal gap.
  */

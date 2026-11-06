@@ -68,6 +68,7 @@ jobs:
           name: windows
           path: |
             out/*.exe
+            out/*.zip
             out/*.exe.blockmap
             out/latest.yml
             out/latest-arm64.yml

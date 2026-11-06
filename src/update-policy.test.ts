@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { EVERY_MS, FOCUS_GAP_MS, HIDDEN_BEFORE_INSTALL_MS, installWhileHidden, isNewer, mayCheckNow, modeFor, nextCheckDelay, QUIET_RESTART_MS, RETRY_MS, startHiddenAfterUpdate } from "./update-policy";
+import { isUnpackedWindows, EVERY_MS, FOCUS_GAP_MS, HIDDEN_BEFORE_INSTALL_MS, installWhileHidden, isNewer, mayCheckNow, modeFor, nextCheckDelay, QUIET_RESTART_MS, RETRY_MS, startHiddenAfterUpdate } from "./update-policy";
 
 const base = { platform: "linux" as NodeJS.Platform, packaged: true, appImage: false, macSigned: false, portable: false };
 
@@ -67,4 +67,11 @@ test("only a newer x.y.z counts as an update", () => {
     assert.equal(isNewer("0.1.4", "0.1.5"), false);
     assert.equal(isNewer("1.0.0-beta", "0.9.9"), true);
     assert.equal(isNewer("garbage", "0.1.5"), false);
+});
+
+test("a Windows folder without the uninstaller is a copy made by hand and never runs the installer updater", () => {
+    assert.equal(isUnpackedWindows({ platform: "win32", packaged: true, uninstallerExists: false }), true);
+    assert.equal(isUnpackedWindows({ platform: "win32", packaged: true, uninstallerExists: true }), false);
+    assert.equal(isUnpackedWindows({ platform: "linux", packaged: true, uninstallerExists: false }), false);
+    assert.equal(isUnpackedWindows({ platform: "win32", packaged: false, uninstallerExists: false }), false);
 });

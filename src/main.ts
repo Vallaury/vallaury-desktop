@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain, Menu, nativeTheme, screen, session, shell,
 import { join } from "node:path";
 import { canOpenOutside, isInside, siteUrl, userAgent } from "./origin";
 import * as autostart from "./autostart";
+import { portableFile } from "./autostart";
 import { keepsRunning, trayUsable } from "./background";
 import * as store from "./store";
 import * as tray from "./tray";
@@ -67,7 +68,8 @@ function start() {
     session.defaultSession.setUserAgent(ua);
     session.defaultSession.setPermissionRequestHandler((contents, permission, allow) => allow(PERMISSIONS.has(permission) && isInside(contents.getURL(), SITE)));
     session.defaultSession.setPermissionCheckHandler((_contents, permission, origin) => PERMISSIONS.has(permission) && isInside(origin, SITE));
-    if (app.isPackaged) app.setAsDefaultProtocolClient("vallaury");
+    if (portableFile) app.setAsDefaultProtocolClient("vallaury", portableFile, []); // not the temporary copy the portable .exe runs from
+    else if (app.isPackaged) app.setAsDefaultProtocolClient("vallaury");
     else app.setAsDefaultProtocolClient("vallaury", process.execPath, [app.getAppPath()]);
     ipcMain.handle("google-signin", (event) => {
         // Only the site's own page, in the top frame, may start it.

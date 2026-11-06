@@ -24,7 +24,7 @@ Download **one file**, the one for your system, from the [latest release](https:
 
 ### Windows
 
-1. Download `Vallaury-<version>-win-x64.exe` (most PCs). Arm laptops: `win-arm64`. 32-bit Windows: `win-ia32`. To find out, open **Start, Settings, System, About** and read "System type".
+1. Download `Vallaury-<version>-win-x64.exe` (most PCs). Arm laptops: `win-arm64`. School or work computers where you cannot install anything: `win-x64-portable.exe` (a single file, starts on a double click) or `win-x64.zip` (unpack it into a folder you can write to and open `Vallaury.exe`). These two do not update themselves; the app tells you when a new version is out. If Windows says the app was blocked by the administrator, use [app.vallaury.it](https://app.vallaury.it) in the browser. 32-bit Windows: `win-ia32`. To find out, open **Start, Settings, System, About** and read "System type".
 2. Double-click it. It installs for your user only and needs no administrator rights.
 3. The installer is not signed yet, so SmartScreen shows **"Windows protected your PC"**. This is expected. Choose **More info**, then **Run anyway**.
 

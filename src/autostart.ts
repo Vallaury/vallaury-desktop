@@ -19,9 +19,13 @@ function portal(on: boolean): void {
     execFile("gdbus", ["call", "--session", "--dest", "org.freedesktop.portal.Desktop", "--object-path", "/org/freedesktop/portal/desktop", "--method", "org.freedesktop.portal.Background.RequestBackground", "", options], () => undefined);
 }
 
+/** The portable .exe runs from a temporary copy; what the system should start later is the file the person double-clicked. */
+export const portableFile = process.platform === "win32" ? process.env.PORTABLE_EXECUTABLE_FILE : undefined;
+const loginQuery = () => (portableFile ? { path: portableFile, args: ["--hidden"] } : { args: ["--hidden"] });
+
 export function isOn(): boolean {
     if (sandboxed) return store.get().login;
-    return process.platform === "linux" ? existsSync(linuxFile()) : app.getLoginItemSettings({ args: ["--hidden"] }).openAtLogin;
+    return process.platform === "linux" ? existsSync(linuxFile()) : app.getLoginItemSettings(loginQuery()).openAtLogin;
 }
 
 export function set(on: boolean): boolean {
@@ -39,7 +43,7 @@ export function set(on: boolean): boolean {
                 writeFileSync(linuxFile(), autostartEntry(exec));
             }
         } else {
-            app.setLoginItemSettings({ openAtLogin: on, args: ["--hidden"] });
+            app.setLoginItemSettings({ openAtLogin: on, ...loginQuery() });
         }
         return isOn() === on;
     } catch {

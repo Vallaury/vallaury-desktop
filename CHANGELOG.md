@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.8 (2026-11-06)
+
+- Windows without administrator rights: every release now also carries `Vallaury-<version>-win-x64-portable.exe` (one file, no installation) and `Vallaury-<version>-win-x64.zip` (a folder that starts without extracting anything, for computers that block programs run from the temporary folder). Neither updates itself; the app tells the person once per version.
+- The portable .exe registers the `vallaury://` links and the start at sign-in with the path of the file the person opened, not with the temporary copy it runs from.
+- A Windows copy made by unpacking the zip no longer runs the installer updater, which would have installed a second copy.
+
 ## 0.1.7 (2026-11-04)
 
 - A new version of the app now starts from clean kept files: the service worker and its caches are emptied once per version, so the app never keeps running on the scripts of the one before. Sign-in is not affected.

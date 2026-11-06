@@ -1,7 +1,9 @@
+import { existsSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { app, ipcMain, Notification, powerMonitor, shell } from "electron";
 import { isInside } from "./origin";
 import * as store from "./store";
-import { EVERY_MS, FIRST_CHECK_MS, installWhileHidden, isNewer, mayCheckNow, modeFor, nextCheckDelay, type Mode, type Phase, type Status } from "./update-policy";
+import { EVERY_MS, FIRST_CHECK_MS, installWhileHidden, isUnpackedWindows, isNewer, mayCheckNow, modeFor, nextCheckDelay, type Mode, type Phase, type Status } from "./update-policy";
 
 export { modeFor, type Mode };
 export const RELEASES = "https://github.com/Vallaury/vallaury-desktop/releases/latest";
@@ -21,7 +23,9 @@ export function start(hooks: { site: string; beforeInstall: () => void; windowHi
         packaged: app.isPackaged,
         appImage: Boolean(process.env.APPIMAGE),
         macSigned: false, // becomes true when the Apple Developer account exists and the dmg is signed and notarised
-        portable: Boolean(process.env.PORTABLE_EXECUTABLE_FILE),
+        portable:
+            Boolean(process.env.PORTABLE_EXECUTABLE_FILE) ||
+            isUnpackedWindows({ platform: process.platform, packaged: app.isPackaged, uninstallerExists: existsSync(join(dirname(process.execPath), "Uninstall Vallaury.exe")) }),
         flatpak: Boolean(process.env.FLATPAK_ID || process.env.SNAP),
     });
 

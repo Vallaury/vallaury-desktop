@@ -21,6 +21,15 @@ I file sono in fondo alla pagina, sotto **Assets**. Non sai che Windows hai? Apr
 2. Compare **"Windows ha protetto il PC"**: succede perché il programma non ha ancora la firma a pagamento di Microsoft. Non è un virus. Clicca **Ulteriori informazioni**, poi **Esegui comunque**.
 3. Vallaury si installa da solo e si apre. Trovi l'icona sul desktop e nel menu Start.
 
+### Windows senza permessi di amministratore (computer della scuola)
+
+Il file `.exe` normale non chiede i permessi di amministratore. Se il computer non permette di installare nulla, esistono due versioni che non installano niente:
+
+- [`Vallaury-{{VERSION}}-win-x64-portable.exe`](https://github.com/Vallaury/vallaury-desktop/releases/download/v{{VERSION}}/Vallaury-{{VERSION}}-win-x64-portable.exe): un solo file, parte con un doppio clic. Puoi tenerlo sul desktop o in Documenti.
+- [`Vallaury-{{VERSION}}-win-x64.zip`](https://github.com/Vallaury/vallaury-desktop/releases/download/v{{VERSION}}/Vallaury-{{VERSION}}-win-x64.zip): scompattalo (clic destro, **Estrai tutto**) in una cartella dove puoi scrivere e apri `Vallaury.exe`. Parte più in fretta e usa solo quella cartella: provalo se la versione portable viene bloccata.
+
+Queste due versioni non si aggiornano da sole: Vallaury ti avvisa quando ne esce una nuova, e basta sostituire il file. Se anche così Windows risponde che l'app è stata bloccata dall'amministratore, la scuola ha una regola che lo impedisce: usa [app.vallaury.it](https://app.vallaury.it) dal browser, che funziona uguale.
+
 ### Mac
 
 1. Scarica il file `.dmg` e aprilo.

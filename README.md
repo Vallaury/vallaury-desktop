@@ -25,6 +25,7 @@ Scarica **un solo file**, quello per il tuo computer, dall'[ultima versione](htt
 | Il tuo computer | Il file da scaricare |
 |---|---|
 | Windows 10 o 11 (quasi tutti i PC) | `Vallaury-<versione>-win-x64.exe` |
+| Windows senza poter installare (PC della scuola) | `win-x64-portable.exe` oppure `win-x64.zip` |
 | Windows su processore Arm | `win-arm64.exe` |
 | Windows a 32 bit (molto raro) | `win-ia32.exe` |
 | Mac (Apple silicon e Intel) | `mac-universal.dmg` |
@@ -38,6 +39,8 @@ Scarica **un solo file**, quello per il tuo computer, dall'[ultima versione](htt
 2. Aprilo con un doppio clic. Si installa solo per il tuo utente e non chiede i permessi di amministratore.
 3. Windows mostra **"Windows ha protetto il PC"**. È normale: l'installer non ha ancora la firma a pagamento di Microsoft. Clicca **Ulteriori informazioni**, poi **Esegui comunque**.
 4. Vallaury si apre da solo. L'icona è sul desktop e nel menu Start.
+
+**Computer della scuola, senza amministratore.** L'installer normale non chiede i permessi di amministratore, ma alcune scuole bloccano comunque i programmi nuovi. Allora scarica `win-x64-portable.exe` (un solo file, parte con un doppio clic) oppure `win-x64.zip` (scompattalo in una cartella dove puoi scrivere e apri `Vallaury.exe`; parte più in fretta). Non si aggiornano da soli: l'app ti avvisa quando esce una versione nuova e basta sostituire il file. Se Windows dice che l'app è stata bloccata dall'amministratore, usa [app.vallaury.it](https://app.vallaury.it) dal browser.
 
 Con [Scoop](https://scoop.sh), se lo usi:
 
